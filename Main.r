@@ -1,3 +1,8 @@
+if(require(shiny)==FALSE){install.packages('shiny')}
+if(require(pracma)==FALSE){install.packages('pracma')}
+if(require(ggplot2)==FALSE){install.packages('ggplot2')}
+if(require(reshape2)==FALSE){install.packages('reshape2')}
+
 library(shiny)
 library(pracma) #provides error function
 library(ggplot2)
@@ -47,7 +52,6 @@ library(directlabels)
       numericInput("reliability2","Reliability of test",.5,min=0.01,max=1,step=.1),
       checkboxInput("penalty", "Check if you want penalty function values", FALSE),
       actionButton('go','Calculate and Plot',icon("arrow-right"),style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
-    downloadButton("report", "Generate report"),
     
     #outputs
     verbatimTextOutput("a"), #error display in case of error or processing time display if no error
@@ -903,28 +907,7 @@ library(directlabels)
 
     })#end observe (the button that made it all go)
       
-          output$report <- downloadHandler(
-            # For PDF output, change this to "report.pdf"
-            filename = "report.html",
-            content = function(file) {
-              # Copy the report file to a temporary directory before processing it, in
-              # case we don't have write permissions to the current working dir (which
-              # can happen when deployed).
-              tempReport <- file.path(tempdir(), "report.Rmd")
-              file.copy("report.Rmd", tempReport, overwrite = TRUE)
-              
-              # Set up parameters to pass to Rmd document
-              params <- list(n = input$slider)
-              
-              # Knit the document, passing in the `params` list, and eval it in a
-              # child of the global environment (this isolates the code in the document
-              # from the code in this app).
-              rmarkdown::render(tempReport, output_file = file,
-                                params = params,
-                                envir = new.env(parent = globalenv())
-              )
-            }
-          )
+     
           
           
   session$onSessionEnded(function() {   #this code closes r when the user exits the browser window, crucial for rinno version
@@ -941,3 +924,19 @@ library(directlabels)
 
 
 shinyApp(ui = ui, server = server)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
